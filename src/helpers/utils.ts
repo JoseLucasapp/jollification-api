@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { createHash as cryptoCreateHash } from 'crypto'
 
 const HASHCODE: string = (process.env.HASHCODE as string);

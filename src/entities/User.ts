@@ -9,6 +9,19 @@ interface UserAttributes {
     is_private?: boolean;
 }
 
-export class UserEntitie extends Model<UserAttributes>{
-    [x: string]: any;
+export class UserEntitie {
+    private readonly _id!: string;
+    public username!: string;
+    public password!: string;
+    public friends_id?: string[];
+    public profile_pic?: string;
+    public is_private?: boolean;
+
+    get id() {
+        return this._id
+    }
+
+    constructor(props: UserAttributes) {
+        Object.assign(this, props)
+    }
 }
