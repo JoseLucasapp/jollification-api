@@ -7,4 +7,5 @@ export interface IUserRepository {
     findById(id: string): Promise<UserEntitie | null>;
     editUser(id: string, data: UserEntitie): Promise<void>;
     deleteUser(id: string): Promise<void>;
+    addFriend(id: string, friendId: string): Promise<void>;
 }

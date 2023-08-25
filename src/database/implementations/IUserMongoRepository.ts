@@ -12,13 +12,14 @@ export class UserMongoRepository implements IUserRepository {
             limit: parseInt(query.limit as string) || 10,
         }
 
-        if (query.username) Object.assign(filter, { name: { $regex: query.username, $options: 'i' } })
+        if (query.username) Object.assign(filter, { name: query.username })
 
         const totalEntries = await User.find(filter).count()
         const userData = await User
             .find(filter)
             .skip(pageOptions.page * pageOptions.limit)
             .limit(pageOptions.limit)
+            .select("-password")
 
         const data = {
             data: userData,
@@ -42,12 +43,15 @@ export class UserMongoRepository implements IUserRepository {
             limit: parseInt(query.limit as string) || 10,
         }
 
-        if (query.username) Object.assign(filter, { username: { $regex: query.username, $options: 'i' } })
+        if (query.friendOf) Object.assign(filter, { friends_id: { $all: [query.friendOf] } })
+        if (query.username) Object.assign(filter, { username: query.username })
+        if (query.password) Object.assign(filter, { password: query.password })
 
         const userData = await User
             .find(filter)
             .skip(pageOptions.page * pageOptions.limit)
             .limit(pageOptions.limit)
+            .select('-password')
 
         if (userData.length <= 0) return []
         return userData
@@ -62,6 +66,9 @@ export class UserMongoRepository implements IUserRepository {
 
     async editUser(id: string, data: UserEntitie): Promise<void> {
         await User.updateOne({ _id: id }, { $set: data })
+    }
+    async addFriend(id: string, friendId: string): Promise<void> {
+        await User.updateOne({ _id: id }, { $push: { friends_id: friendId } })
     }
 
     async deleteUser(id: string): Promise<void> {

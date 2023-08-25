@@ -15,5 +15,7 @@ export class CreateUserUseCase {
         }
 
         await this.userRepository.save(user)
+
+        return data
     }
 }

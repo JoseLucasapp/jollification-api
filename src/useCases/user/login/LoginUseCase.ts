@@ -11,8 +11,8 @@ export class LoginUseCase {
         const user = await this.userRepository.findAll({ username: data.username, password: pass })
 
         if (user.length <= 0) {
-            const userPass = await this.userRepository.find({ username: data.username })
-            if (userPass) {
+            const userPass = await this.userRepository.findAll({ username: data.username })
+            if (userPass[0]) {
                 return 'Incorrect password'
             }
             return 'Not found'
@@ -23,6 +23,6 @@ export class LoginUseCase {
             username: user[0].username,
         })
 
-        return { user, token }
+        return { user: user[0], token }
     }
 }
